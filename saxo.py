@@ -54,9 +54,9 @@ class SaxoConnection:
         rv = self._client.request(r)
         assert rv is None and r.status_code == 200
 
-    def get_account_info(self):
+    def get_account_info(self) -> dict[str, object]:
         req = ps.accounts.AccountsMe()
-        self._client.request(req)
+        return self._client.request(req)
 
     def get_account_balance(self) -> float:
         req = ps.balances.AccountBalancesMe()
