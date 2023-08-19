@@ -30,6 +30,11 @@ class SaxoLogin:
         self.token_url = app_config['TokenEndpoint']
         # generate random state
         self.state = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        # guess environment type from auth url
+        if auth_url.startswith("https://sim."):
+            self.environment = "simulation"
+        else:
+            self.environment = "live"
         # generate and open full authentication url
         self.auth_url = f"{auth_url}?response_type=code&client_id={self.app_key}&state={self.state}&redirect_uri={self.redirect_url}"
 
@@ -43,7 +48,7 @@ class SaxoLogin:
                 if cached_app_key == self.app_key:
                     token = cache_data['token']
                     # check if token is valid
-                    connection = SaxoConnection(token)
+                    connection = SaxoConnection(self.environment, token)
                     connection.get_account_info()
                     # if yes, return connection
                     logging.info("Token cache found, using cached token")
@@ -115,9 +120,11 @@ class SaxoLogin:
         with open(self.TOKEN_CACHE_FILE, 'w') as f:
             json.dump({'app_key': self.app_key, 'token': token}, f)
         # return connection
-        return SaxoConnection(token)
+        return SaxoConnection(self.environment, token)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    connection = SaxoLogin("sim.json").login()
-    pprint(connection.get_account_info())
+    connection = SaxoLogin("live.json").login()
+    for p in connection.get_account_positions():
+        print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
+    print(f"Cash={connection.get_account_balance()}")

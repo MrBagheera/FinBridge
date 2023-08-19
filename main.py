@@ -10,7 +10,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     # set up Saxo connection
-    connection: SaxoConnection = SaxoLogin("sim.json").login()
+    connection: SaxoConnection = SaxoLogin("live.json").login()
 
     # set up Google Sheets connection
     serviceAccount: Client = gspread.service_account()
