@@ -39,7 +39,10 @@ class SaxoPosition:
         amount = safe_get(base, 'Amount', 0.0)
         open_price = -safe_get(view, 'MarketValueOpenInBaseCurrency', -0.0)
         current_price = safe_get(view, 'MarketValueInBaseCurrency', 0.0)
-        profit_loss = safe_get(view, 'TradeCostsTotalInBaseCurrency', 0.0)
+        profit_loss = (
+            safe_get(view, 'ProfitLossCurrencyConversion', 0.0)
+            + safe_get(view, 'ProfitLossOnTradeInBaseCurrency', 0.0)
+            + safe_get(view, 'TradeCostsTotalInBaseCurrency', 0.0))
         exposure = safe_get(view, 'ExposureInBaseCurrency', 0.0)
         if current_price == 0.0 and open_price != 0.0:
             current_price = open_price + profit_loss
