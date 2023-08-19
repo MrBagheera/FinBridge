@@ -4,21 +4,19 @@ import os
 import random
 import string
 import threading
-from pprint import pprint
+import webbrowser
 from threading import Event
 
 import requests
+from flask import Flask, request
 
 from saxo import SaxoConnection
-import webbrowser
-from flask import Flask, request, jsonify
-from werkzeug.datastructures import MultiDict
-
-TOKEN_CACHE_FILE = "~/.config/fin_bridge.json"
 
 
 class SaxoLogin:
     """Performs interactive login procedure, caches token in local file ~/.config/fin_bridge.json"""
+
+    TOKEN_CACHE_FILE = os.path.expanduser("~/.config/fin_bridge.json")
 
     def __init__(self, app_config_filename: str):
         # read app config as json
@@ -38,7 +36,7 @@ class SaxoLogin:
     def login(self) -> SaxoConnection:
         # try to read token from cache
         try:
-            with open(TOKEN_CACHE_FILE, 'r') as f:
+            with open(self.TOKEN_CACHE_FILE, 'r') as f:
                 # check is token is for same app key
                 cache_data = json.load(f)
                 cached_app_key = cache_data['app_key']
@@ -112,9 +110,9 @@ class SaxoLogin:
         token: str = response_json['access_token']
         # cache token
         # ensure cache file and directory exist
-        directory = os.path.dirname(TOKEN_CACHE_FILE)
+        directory = os.path.dirname(self.TOKEN_CACHE_FILE)
         os.makedirs(directory, exist_ok=True)
-        with open(TOKEN_CACHE_FILE, 'x') as f:
+        with open(self.TOKEN_CACHE_FILE, 'w') as f:
             json.dump({'app_key': self.app_key, 'token': token}, f)
         # return connection
         return SaxoConnection(token)
