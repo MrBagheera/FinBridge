@@ -1,8 +1,9 @@
-from saxo_openapi import API
-import saxo_openapi.endpoints.rootservices as rs
-import saxo_openapi.endpoints.portfolio as ps
+import logging
+from pprint import pformat
 
-from pprint import pprint
+import saxo_openapi.endpoints.portfolio as ps
+import saxo_openapi.endpoints.rootservices as rs
+from saxo_openapi import API
 
 
 class SaxoPosition:
@@ -65,24 +66,14 @@ class SaxoConnection:
     def get_account_balance(self) -> float:
         req = ps.balances.AccountBalancesMe()
         resp = self._client.request(req)
-        pprint(resp)
-        return resp['TotalValue']
+        logging.debug(f"AccountBalancesMe: response={pformat(resp)}")
+        return resp['CashBalance']
 
     def get_account_positions(self) -> list[SaxoPosition]:
         req = ps.netpositions.NetPositionsMe({'FieldGroups': 'NetPositionBase,NetPositionView,DisplayAndFormat'})
-        print(req)
         resp = self._client.request(req)
-        print("PositionsMe: response=")
-        pprint(resp)
+        logging.debug(f"PositionsMe: response={pformat(resp)}")
         _positions = []
         for p in resp['Data']:
             _positions.append(SaxoPosition.parse(p))
         return _positions
-
-if __name__ == "__main__":
-    token = "eyJhbGciOiJFUzI1NiIsIng1dCI6IkRFNDc0QUQ1Q0NGRUFFRTlDRThCRDQ3ODlFRTZDOTEyRjVCM0UzOTQifQ.eyJvYWEiOiI3Nzc3NSIsImlzcyI6Im9hIiwiYWlkIjoiMTA5IiwidWlkIjoidXw0R01CQk42amxEbXBCb3kyQ0JMUT09IiwiY2lkIjoidXw0R01CQk42amxEbXBCb3kyQ0JMUT09IiwiaXNhIjoiRmFsc2UiLCJ0aWQiOiIyMDAyIiwic2lkIjoiYTQzYTNmNDg1OWIyNGM5YWIyOTY0MGZkYmU3OTA5NTYiLCJkZ2kiOiI4NCIsImV4cCI6IjE3MDAxMzY0NjEiLCJvYWwiOiIxRiIsImlpZCI6ImViZWNlYmM0NmIxYTRkNzA5NmRlMDhkYjkxYjBhNzUxIn0.ZgISXe3I1HLtp_ki2KO7-GomNe4RXgxmsp8LiHSO-_46yQ0WPqqz7WD2juDHsJh2VsfIcY3VYjn-nuf-uQf8oA"
-    connection = SaxoConnection("simulation", token)
-    # connection.get_account_info()
-    # print(f"Account balance = {connection.get_account_balance()} EUR")
-    for p in connection.get_account_positions():
-        print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
