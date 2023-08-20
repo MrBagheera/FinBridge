@@ -1,4 +1,5 @@
 import logging
+import time
 
 import gspread
 from gspread import Client, Spreadsheet
@@ -23,8 +24,12 @@ if __name__ == "__main__":
     for p in positions:
         logging.info(f"Adding/updating position {p.name}")
         positionsTable.add_or_update_position(p.name, p.open_price, p.current_price, p.profit_loss, p.exposure)
+        # delay 1 second to avoid rate limiting
+        time.sleep(1)
     known_positions: list[str] = list(map(lambda y: y.name, positions))
     removed_positions: list[str] = list(filter(lambda x: x not in known_positions, positionsTable.positions()))
     for p in removed_positions:
         logging.info(f"Removing position {p}")
         positionsTable.remove_position(p)
+        # delay 1 second to avoid rate limiting
+        time.sleep(1)
