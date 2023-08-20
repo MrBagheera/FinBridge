@@ -19,10 +19,7 @@ class SaxoLogin:
 
     TOKEN_CACHE_FILE = os.path.expanduser("~/.config/fin_bridge.json")
 
-    def __init__(self, app_config_filename: str):
-        # read app config as json
-        with open(app_config_filename, 'r') as f:
-            app_config = json.load(f)
+    def __init__(self, app_config: dict[str, object]):
         # extract app key, secret, authentication url, and redirect url
         self.app_key = app_config['AppKey']
         self.app_secret = app_config['AppSecret']
@@ -125,9 +122,13 @@ class SaxoLogin:
         # return connection
         return SaxoConnection(self.environment, token)
 
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    connection = SaxoLogin("live.json").login()
+    # read app config as json
+    with open("live.json", 'r') as f:
+        app_config = json.load(f)
+    connection = SaxoLogin(app_config['saxo_app']).login()
     # for p in connection.get_account_positions():
     #     print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
     print(f"Cash={connection.get_account_balance()}")
