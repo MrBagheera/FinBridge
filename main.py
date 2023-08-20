@@ -23,7 +23,7 @@ if __name__ == "__main__":
     positions.append(SaxoPosition("Cash", 0.0, 0.0, 0.0, connection.get_account_balance(), 0.0))
     for p in positions:
         logging.info(f"Adding/updating position {p.name}")
-        positionsTable.add_or_update_position(p.name, p.open_price, p.current_price, p.profit_loss, p.exposure)
+        positionsTable.add_or_update_position(p.name, p.amount, p.open_price, p.current_price, p.profit_loss, p.exposure)
         # delay 1 second to avoid rate limiting
         time.sleep(1)
     known_positions: list[str] = list(map(lambda y: y.name, positions))

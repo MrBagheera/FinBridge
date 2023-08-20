@@ -51,29 +51,33 @@ class PositionsTable:
             if self._positions[i] > index:
                 self._positions[i] -= 1
 
-    def add_or_update_position(self, name: str, open_price: float, current_price: float,
+    def add_or_update_position(self, name: str, amount: int, open_value: float, current_value: float,
                                profit_loss: float, exposure: float):
         """Add or update a position in the table."""
         def optional(x: float | int) -> str:
             return '' if x == 0 else str(x)
         values = [
-            optional(open_price),
-            optional(current_price),
-            optional(profit_loss),
+            optional(amount),
+            '',  # open price
+            '',  # current price
+            '',  # currency
+            optional(open_value),
+            optional(current_value),
+            profit_loss,
             optional(exposure)
         ]
         if name in self._positions:
             # update the row
             index: int = self._positions[name]
             self._backend.update(
-                f"G{index+1}:J{index+1}",  # Google Sheets is 1-indexed
+                f"C{index+1}:J{index+1}",  # Google Sheets is 1-indexed
                 [values],
                 value_input_option='USER_ENTERED')
         else:
             # add a new row at the end of the section
             index: int = self._sectionEndIndex
             self._backend.insert_row(
-                values=['', name, '', '', '', ''] + values,
+                values=['', name] + values,
                 index=index + 1,  # Google Sheets is 1-indexed
                 value_input_option='USER_ENTERED')
             self._positions[name] = index
@@ -87,7 +91,7 @@ if __name__ == "__main__":
     print(positions.name, positions.length(), positions.positions())
     positions.add_or_update_position("Test", 1.0, 1.1, 0.1, 0)
     # positions.remove_position("Test")
-    positions.add_or_update_position("Coca-Cola", 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Exxon Mobil Corporation", 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Apple Inc.", 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Cash", 0, 100000.25, 0, 0)
+    positions.add_or_update_position("Coca-Cola", 0, 1.0, 1.1, 0.1, 110.0)
+    positions.add_or_update_position("Exxon Mobil Corporation", 0, 1.0, 1.1, 0.1, 110.0)
+    positions.add_or_update_position("Apple Inc.", 0, 1.0, 1.1, 0.1, 110.0)
+    positions.add_or_update_position("Cash", 0, 0, 100000.25, 0, 0)

@@ -18,12 +18,12 @@ class SaxoPosition:
 
     __match_args__ = ('name', 'amount', 'open_price', 'current_price', 'profit_loss', 'exposure')
 
-    def __init__(self, name: str, amount: float, open_price: float, current_price: float,
+    def __init__(self, name: str, amount: int, open_value: float, current_value: float,
                  profit_loss: float, exposure: float):
         self.name = name
         self.amount = amount
-        self.open_price = open_price
-        self.current_price = current_price
+        self.open_price = open_value
+        self.current_price = current_value
         self.profit_loss = profit_loss
         self.exposure = exposure
 
@@ -38,16 +38,17 @@ class SaxoPosition:
         base = raw['NetPositionBase']
         view = raw['NetPositionView']
         amount = safe_get(base, 'Amount', 0.0)
-        open_price = -safe_get(view, 'MarketValueOpenInBaseCurrency', -0.0)
-        current_price = safe_get(view, 'MarketValueInBaseCurrency', 0.0)
+        open_value = -safe_get(view, 'MarketValueOpenInBaseCurrency', -0.0)
+        current_value = safe_get(view, 'MarketValueInBaseCurrency', 0.0)
         profit_loss = (
             safe_get(view, 'ProfitLossCurrencyConversion', 0.0)
             + safe_get(view, 'ProfitLossOnTradeInBaseCurrency', 0.0)
             + safe_get(view, 'TradeCostsTotalInBaseCurrency', 0.0))
         exposure = safe_get(view, 'ExposureInBaseCurrency', 0.0)
-        if current_price == 0.0 and open_price != 0.0:
-            current_price = open_price + profit_loss
-        return SaxoPosition(name, amount, open_price, current_price, profit_loss, exposure)
+        if current_value == 0.0 and open_value != 0.0 and profit_loss != 0.0:
+            logging.warning(f"Position {name} has current value 0.0, restoring from open value and profit/loss")
+            current_value = open_value + profit_loss
+        return SaxoPosition(name, amount, open_value, current_value, profit_loss, exposure)
 
 class SaxoConnection:
     """Connection to Saxo Bank platform"""
