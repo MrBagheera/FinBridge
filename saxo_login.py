@@ -6,6 +6,7 @@ import string
 import threading
 import webbrowser
 from threading import Event
+from saxo_openapi.exceptions import OpenAPIError
 
 import requests
 from flask import Flask, request
@@ -56,9 +57,11 @@ class SaxoLogin:
                 # fall through to interactive login
         except FileNotFoundError:
             logging.info("Token cache not found, performing interactive login")
+        except OpenAPIError:
+            logging.warning("Token cache found, but token is invalid, performing interactive login")
         except Exception:
             # log exception and fall through to interactive login
-            logging.warning("Token cache found, but token is invalid, performing interactive login", exc_info=True)
+            logging.warning("Unexpected exception re-using cached token, performing interactive login", exc_info=True)
         # perform interactive login
         return self._run_interactive_login()
 
@@ -125,6 +128,6 @@ class SaxoLogin:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     connection = SaxoLogin("live.json").login()
-    for p in connection.get_account_positions():
-        print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
+    # for p in connection.get_account_positions():
+    #     print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
     print(f"Cash={connection.get_account_balance()}")
