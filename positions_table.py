@@ -70,14 +70,14 @@ class PositionsTable:
             # update the row
             index: int = self._positions[name]
             self._backend.update(
-                f"C{index+1}:J{index+1}",  # Google Sheets is 1-indexed
+                f"E{index+1}:L{index+1}",  # Google Sheets is 1-indexed
                 [values],
                 value_input_option='USER_ENTERED')
         else:
             # add a new row at the end of the section
             index: int = self._sectionEndIndex
             self._backend.insert_row(
-                values=['', name] + values,
+                values=['', name, '', ''] + values,
                 index=index + 1,  # Google Sheets is 1-indexed
                 value_input_option='USER_ENTERED')
             self._positions[name] = index
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     sheet: Spreadsheet = serviceAccount.open("FinBridge")
     positions = PositionsTable(sheet.worksheet("Positions"), "Saxo")
     print(positions.name, positions.length(), positions.positions())
-    positions.add_or_update_position("Test", 1.0, 1.1, 0.1, 0)
+    positions.add_or_update_position("Test", 1.0, 1.1, 0.1, 0, 100)
     # positions.remove_position("Test")
     positions.add_or_update_position("Coca-Cola", 0, 1.0, 1.1, 0.1, 110.0)
     positions.add_or_update_position("Exxon Mobil Corporation", 0, 1.0, 1.1, 0.1, 110.0)

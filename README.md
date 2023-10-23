@@ -11,16 +11,17 @@ Simple tool to import current positions from Saxo Bank into Google Sheets
 - This script is going to update only section of "Saxo" provider
 - Columns:
   - A: Investment type - single letter (manual)
-  - B: Instrument name as it appears in Saxo Platform
-  - C: Amount (manual)
-  - D: Open price (manual)
-  - E: Current price (manual)
-  - F: Currency (manual)
-  - G: Open position, euros
-  - H: Current position, euros
-  - I: P/L, euros
-  - J: Exposure (if available), euros
-  - A few extra columns (manual)
+  - B: Instrument name as it appears in Saxo Platform (manual)
+  - C: Investment Country (manual)
+  - D: Instrument Sector (manual)
+  - E: Amount (manual)
+  - F: Open price (manual)
+  - G: Current price (manual)
+  - H: Currency (manual)
+  - I: Open position, euros
+  - J: Current position, euros
+  - K: P/L, euros
+  - L: Exposure (if available), euros
 - Script goes over all Saxo accounts, for each tries to find row by matching instrument name 
   - If found: Updates existing columns 3-7
   - If not found: inserts and fills new row before section end (or "Cash" row)
