@@ -2,11 +2,12 @@
 *.json
 /Taxes
 /tmp/**
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/copilot.data.migration.agent.xml
-/.idea/copilot.data.migration.ask.xml
-/.idea/copilot.data.migration.ask2agent.xml
-/.idea/copilot.data.migration.edit.xml
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
 
 # uv / Python packaging
 .venv/
