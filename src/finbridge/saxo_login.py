@@ -82,13 +82,13 @@ class SaxoLogin:
             nonlocal code
             code = request.args['code']
             code_set_event.set()
-            return "Main thread continue, please close this window", 200
+            return "Authenticated successfully. Please close this browser window.", 200
 
         def run_server():
             app.run(port=5050)
 
         # Run the Flask app in a separate thread
-        t = threading.Thread(target=run_server)
+        t = threading.Thread(target=run_server, daemon=True)
         t.start()
         # Open the browser
         webbrowser.open(self.auth_url)
