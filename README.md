@@ -32,12 +32,13 @@ Simple tool to import current positions from Saxo Bank into Google Sheets
 ## Running
 
 ```shell
-python3 main.py <config_file>
+uv sync
+finbridge <config_file>
 ```
 
 Where `<config_file>` is JSON file with following fields:
-- `saxo_app`: Saxo app configuration, as downloaded from app registration page on developer portal. `RedirectUrl` 
-should be configured to `http://localhost:5050/webhook`.
+- `saxo_app`: Saxo app configuration, as downloaded from app registration page on developer portal. `RedirectUrls`
+should be configured to `["http://localhost:5050/webhook"]`.
 - `google_sheets`: Google Sheets configuration
   - `sheet_name`: Name of the sheet
   - `worksheet_name`: Name of the worksheet
