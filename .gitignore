@@ -1,9 +1,16 @@
 # local app configurations
 *.json
-/Taxes/
+/Taxes
 /tmp/**
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/copilot.data.migration.agent.xml
 /.idea/copilot.data.migration.ask.xml
 /.idea/copilot.data.migration.ask2agent.xml
 /.idea/copilot.data.migration.edit.xml
+
+# uv / Python packaging
+.venv/
+__pycache__/
+*.pyc
+uv.lock
+dist/

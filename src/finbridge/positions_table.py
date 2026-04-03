@@ -82,16 +82,3 @@ class PositionsTable:
                 value_input_option='USER_ENTERED')
             self._positions[name] = index
             self._sectionEndIndex += 1
-
-
-if __name__ == "__main__":
-    serviceAccount: Client = gspread.service_account()
-    sheet: Spreadsheet = serviceAccount.open("FinBridge")
-    positions = PositionsTable(sheet.worksheet("Positions"), "Saxo")
-    print(positions.name, positions.length(), positions.positions())
-    positions.add_or_update_position("Test", 1.0, 1.1, 0.1, 0, 100)
-    # positions.remove_position("Test")
-    positions.add_or_update_position("Coca-Cola", 0, 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Exxon Mobil Corporation", 0, 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Apple Inc.", 0, 1.0, 1.1, 0.1, 110.0)
-    positions.add_or_update_position("Cash", 0, 0, 100000.25, 0, 0)

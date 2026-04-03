@@ -5,9 +5,9 @@ import time
 
 import gspread
 from gspread import Client, Spreadsheet
-from positions_table import PositionsTable
-from saxo import SaxoConnection, SaxoPosition
-from saxo_login import SaxoLogin
+from .positions_table import PositionsTable
+from .saxo import SaxoConnection, SaxoPosition
+from .saxo_login import SaxoLogin
 
 class Config:
     """Configuration for FinBridge"""
@@ -28,12 +28,12 @@ class Config:
             self.debug = False
 
 
-if __name__ == "__main__":
+def main():
     # check if config file specified as first parameter
     if len(sys.argv) == 2:
         config_filename = sys.argv[1]
     else:
-        print("Usage: python3 main.py <config_file>")
+        print("Usage: finbridge <config_file>")
         sys.exit(1)
 
     config = Config(config_filename)
@@ -62,3 +62,7 @@ if __name__ == "__main__":
         positionsTable.remove_position(p)
         if config.throttle_delay > 0:
             time.sleep(config.throttle_delay)
+
+
+if __name__ == "__main__":
+    main()

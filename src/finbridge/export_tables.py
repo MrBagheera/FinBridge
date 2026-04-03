@@ -53,10 +53,14 @@ def extract_and_merge_tables(pdf_path, pages="all"):
     return merged_tables
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Extract tables from PDF files")
     parser.add_argument("pdf_path", help="Path to the PDF file")
 
     args = parser.parse_args()
 
-    tables = extract_and_merge_tables(args.pdf_path)
+    extract_and_merge_tables(args.pdf_path)
+
+
+if __name__ == "__main__":
+    main()

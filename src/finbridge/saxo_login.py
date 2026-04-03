@@ -11,7 +11,7 @@ from saxo_openapi.exceptions import OpenAPIError
 import requests
 from flask import Flask, request
 
-from saxo import SaxoConnection
+from .saxo import SaxoConnection
 
 
 class SaxoLogin:
@@ -121,14 +121,3 @@ class SaxoLogin:
             json.dump({'app_key': self.app_key, 'token': token}, f)
         # return connection
         return SaxoConnection(self.environment, token)
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
-    # read app config as json
-    with open("live.json", 'r') as f:
-        app_config = json.load(f)
-    connection = SaxoLogin(app_config['saxo_app']).login()
-    # for p in connection.get_account_positions():
-    #     print(f"{p.name} {p.amount} {p.open_price} {p.current_price} {p.profit_loss} {p.exposure}")
-    print(f"Cash={connection.get_account_balance()}")
